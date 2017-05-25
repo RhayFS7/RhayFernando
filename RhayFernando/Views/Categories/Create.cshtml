@@ -1,0 +1,69 @@
+﻿ @model RhayFernando.Models.Category
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "New Category";
+
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Register new Category
+        </div>
+
+        <div class="panel-body">
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Name, new { htmlAttribute = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="panel-footer panel-info">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit"
+                       value="ADD Category"
+                       class="btn btn-danger" />
+                @Html.ActionLink("Return Listing Category", "Index", null, new { @class = "btn btn-warning" })
+            </div>
+            <br />
+            <br />
+        </div>
+
+    </div>
+}
+
+@section ScriptPage{
+
+    <script src="~/Scripts/jquery.validate.min.js">
+
+    </script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js">
+
+    </script>
+    <script type="text/javascript">
+
+                $(document).ready(function () {
+                    $('li').removeClass("active");
+                $('#liCategories').addClass("active");
+            $('.table').dataTable({
+                    "order": [[0, "asc"]]
+            });
+});
+
+
+    </script>
+
+
+}

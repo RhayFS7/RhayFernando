@@ -1,0 +1,124 @@
+﻿@model IEnumerable<RhayFernando.Models.Category>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "list of Categories";
+}
+
+
+@if (@TempData["Massage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["Message"]
+    </div>
+}
+
+
+<!DOCTYPE html>
+
+<div class="panel panel-primary">
+
+    <div class="panel-heading">
+
+        List Category
+
+    </div>
+
+    <div class="panel-body">
+
+        <table class="table table-striped table-hover">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+
+                        @Html.DisplayNameFor(model => model.CategoryID)
+
+                    </th>
+
+                    <th>
+
+                        @Html.DisplayNameFor(Model => Model.Name)
+
+                    </th>
+
+                    <th></th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model)
+
+                {
+
+                    <tr>
+
+                        <td>
+
+                            @Html.DisplayFor(modelItem => item.CategoryID)
+
+                        </td>
+
+                        <td>
+
+                            @Html.DisplayFor(modelItem => item.Name)
+
+                        </td>
+
+                        <td>
+
+                            @Html.ActionLink("Edit", "Edit", new { id = item.CategoryID }) |
+
+                            @Html.ActionLink("Details", "Details", new { id = item.CategoryID }) |
+
+                            @Html.ActionLink("Delete", "Delete", new { id = item.CategoryID })
+
+                        </td>
+
+                    </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="panel-footer panel-info">
+
+        @Html.ActionLink("Register a new Category", "Create", null, new { @class = "btn btn-success" })
+
+    </div>
+
+</div>
+
+@section styles{
+
+    <link href="@Url.Content("~/content/DataTables/css/dataTables.bootstrap.css")" rel="stylesheet" />
+
+}
+
+@section ScriptPage {
+
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+
+    <script src="~/Scripts/DataTables/buttons.bootstrap.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('li').removeClass("active");
+            $('#liCategories').addClass("active");
+            $('.table').dataTable({
+                "order": [[0, "asc"]]
+            });
+        });
+
+
+    </script>
+}
