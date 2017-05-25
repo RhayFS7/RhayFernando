@@ -1,8 +1,5 @@
 ﻿using RhayFernando.ExtensionMethods;
 using RhayFernando.Models;
-using Persistence.Contexts;
-using System.Data.Entity;
-using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Service.Tables;
@@ -14,6 +11,7 @@ using System;
 
 namespace RhayFernando.Model.Tables
 {
+
     public class CategoriesController : Controller
     {
 
