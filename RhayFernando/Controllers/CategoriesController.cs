@@ -67,6 +67,7 @@ namespace RhayFernando.Model.Tables
         public async Task<ActionResult> Index()
             //public ActionResult Index()
         {
+            var apiModel = new CategoryListAPIModel();
             var list = new List<Category>();
 
             using (var client = new HttpClient())
@@ -88,8 +89,7 @@ namespace RhayFernando.Model.Tables
                         .ReadAsStringAsync()
                         .Result;
 
-                    list = JsonConvert
-                        .DeserializeObject<List<Category>>(result);
+                    
                 }
             }
 
@@ -124,13 +124,12 @@ namespace RhayFernando.Model.Tables
         #region [ Edit ]
 
         // GET: Edit Category
-        public ActionResult Edit(long? ID)
+        public ActionResult Edit(long? id)
         {
-            PopularViewBag(categoryServices.GetCategoryById((long)ID));
-            return GetViewCategoryById(ID);
+            return ByID(id);
         }
 
-        //POST: Categories/Edit
+        //POST: Edit Category
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Category category)
@@ -183,5 +182,79 @@ namespace RhayFernando.Model.Tables
         #endregion [ Count Word ] 
 
         #endregion [ Extensions ]
+
+        private async Task<HttpResponseMessage> GetFromAPI(long? id, Action<HttpResponseMessage> action)
+        {
+            using (var client = new HttpClient())
+            {
+                var baseUrl = string.Format("{0}://{1}", HttpContext.Request.Url.Scheme, HttpContext.Request.Url.Authority);
+                client.BaseAddress = new Uri(baseUrl);
+                client.DefaultRequestHeaders.Clear();
+
+                var url = "Api/Categories";
+                if (id != null)
+                    url = "Api/Categories/" + id;
+
+                var request = await client.GetAsync(url);
+
+                if (action != null)
+                    action.Invoke(request);
+
+                return request;
+            }
+        }
+
+        private async Task<ActionResult> GetViewByID(long? id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            CategoryAPIModel item = null;
+
+            var resp = await GetFromAPI(id.Value, response =>
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    item = JsonConvert.DeserializeObject<CategoryAPIModel>(result);
+                }
+            });
+
+            if (!resp.IsSuccessStatusCode)
+                return new HttpStatusCodeResult(resp.StatusCode);
+
+            if (item.Message == "!OK" || item.Result == null)
+                return HttpNotFound();
+
+            return View(item.Result);
+        }        private ActionResult ByID(long? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Category category = categoryServices.GetByID((long)id);
+            if (category == null)
+            {
+                return HttpNotFound();
+            }
+            return View(category);
+        }        private ActionResult Save(Category category)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+
+                    categoryServices.SaveCategory(category);
+                    return RedirectToAction("Index");
+                }
+                return View(category);
+            }
+            catch
+            {
+                return View(category);
+            }
+        }
     }
 }

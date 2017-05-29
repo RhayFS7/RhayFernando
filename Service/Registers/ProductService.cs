@@ -17,6 +17,8 @@ namespace Service.Registers
             return productDAL.GetProductsClassifiedByName();
 
         }
+
+       
         public Product GetProductById(long id)
         {
             return productDAL.GetProductById(id);

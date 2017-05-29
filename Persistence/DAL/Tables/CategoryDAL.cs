@@ -9,6 +9,16 @@ namespace Persistence.DAL.Tables
     {
         private EFContext context = new EFContext();
 
+        public IQueryable<Category> GetOrderbyName()
+        {
+            return context.Categories.OrderBy(c => c.Name);
+        }
+
+        public Category GetOrderById(long? id)
+        {
+            return context.Categories.Where(c => c.CategoryID == id).First(); 
+        }
+
         public IQueryable<Category> GetCategoriesClassifiedByName()
         {
             return context.Categories.OrderBy(b => b.Name);

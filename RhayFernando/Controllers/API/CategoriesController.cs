@@ -22,11 +22,11 @@ namespace RhayFernando.Controllers.API
 
             try
             {
-                apiModel Result = service.Get();
+                apiModel.Result = service.GetByName();
             }
             catch (System.Exception)
             {
-                apiModel Message = "!OK";
+                apiModel.Message = "!OK";
             }
             return apiModel;
       
